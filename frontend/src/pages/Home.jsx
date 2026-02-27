@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, MapPin, AlertTriangle, ShieldCheck, ThermometerSun, Leaf, Volume2, Loader2 } from 'lucide-react';
+import { Camera, MapPin, AlertTriangle, ShieldCheck, ThermometerSun, Leaf, Volume2, Loader2, Cloud, Droplets, Wind, Thermometer } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { getCropSuitability } from '../utils/cropData';
 import { ttsService } from '../services/ttsService';
@@ -14,11 +14,18 @@ export default function Home() {
         ttsService.speak(t('homeWelcome'), i18n.language);
     }, []);
 
-    // Location States
     const [locationData, setLocationData] = useState({
         regionName: t('detectingLocation'),
         favorableCrops: ["-"],
         unfavorableCrops: ["-"],
+        isLoading: true,
+        error: null
+    });
+
+    const [climateData, setClimateData] = useState({
+        temperature: null,
+        humidity: null,
+        windSpeed: null,
         isLoading: true,
         error: null
     });
@@ -73,6 +80,26 @@ export default function Home() {
                             setLocationData(prev => ({ ...prev, regionName: t('locationUnavailable'), isLoading: false, error: "Failed to fetch exact area." }));
                         }
                     }
+
+                    try {
+                        // Fetching real climatic conditions from Open-Meteo
+                        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`);
+                        const weatherJson = await weatherRes.json();
+                        if (isMounted && weatherJson.current) {
+                            setClimateData({
+                                temperature: weatherJson.current.temperature_2m,
+                                humidity: weatherJson.current.relative_humidity_2m,
+                                windSpeed: weatherJson.current.wind_speed_10m,
+                                isLoading: false,
+                                error: null
+                            });
+                        }
+                    } catch (weatherErr) {
+                        console.error("Weather fetch failed:", weatherErr);
+                        if (isMounted) {
+                            setClimateData(prev => ({ ...prev, isLoading: false, error: "Failed to fetch climate data." }));
+                        }
+                    }
                 },
                 (err) => {
                     console.error("Geolocation error:", err);
@@ -88,6 +115,7 @@ export default function Home() {
                             favorableCrops: [t('enableLocation')],
                             unfavorableCrops: [t('enableLocation')]
                         }));
+                        setClimateData(prev => ({ ...prev, isLoading: false, error: errorMsg }));
                     }
                 },
                 { timeout: 10000 }
@@ -137,37 +165,70 @@ export default function Home() {
 
     return (
         <div className="page-container fade-in-up">
-            {/* Location Intelligence Banner */}
-            <div className="location-banner glass-card mb-6">
-                <div className="location-header">
-                    {locationData.isLoading ? (
-                        <Loader2 size={20} className="text-primary animate-spin" />
-                    ) : (
-                        <MapPin size={20} className="text-primary" />
-                    )}
-                    <h3>{locationData.regionName}</h3>
+            {/* Full Width Climate & Location Container */}
+            <div className="climate-container glass-card mb-6 mt-4" style={{ width: '100%', padding: '1.5rem', borderRadius: '24px' }}>
+                <div className="location-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {locationData.isLoading ? (
+                            <Loader2 size={24} className="text-primary animate-spin" />
+                        ) : (
+                            <MapPin size={24} className="text-primary" />
+                        )}
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+                            {locationData.regionName}
+                        </h2>
+                    </div>
+                </div>
+
+                <div className="climate-grid" style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+                    gap: '1rem',
+                    marginBottom: '1.25rem',
+                    background: 'rgba(0,0,0,0.15)',
+                    padding: '1rem',
+                    borderRadius: '16px'
+                }}>
+                    <div className="climate-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' }}>
+                        <Thermometer size={20} style={{ color: '#fb923c' }} />
+                        <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>
+                            {climateData.isLoading ? '-' : (climateData.error ? 'N/A' : `${climateData.temperature}°C`)}
+                        </span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>Temp</span>
+                    </div>
+                    <div className="climate-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', borderLeft: '1px solid var(--glass-border)', borderRight: '1px solid var(--glass-border)' }}>
+                        <Droplets size={20} style={{ color: '#38bdf8' }} />
+                        <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>
+                            {climateData.isLoading ? '-' : (climateData.error ? 'N/A' : `${climateData.humidity}%`)}
+                        </span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>Humidity</span>
+                    </div>
+                    <div className="climate-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' }}>
+                        <Wind size={20} style={{ color: '#a78bfa' }} />
+                        <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>
+                            {climateData.isLoading ? '-' : (climateData.error ? 'N/A' : `${climateData.windSpeed} km/h`)}
+                        </span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>Wind</span>
+                    </div>
                 </div>
 
                 {locationData.error ? (
-                    <p className="subtitle mt-2 text-error" style={{ fontSize: "0.85rem" }}>{locationData.error}</p>
+                    <p className="subtitle text-error" style={{ fontSize: "0.9rem", margin: 0 }}>{locationData.error}</p>
                 ) : (
-                    <div className="crops-info mt-2">
-                        <div className="crop-badge favorable">
-                            <Leaf size={14} className="mr-1" />
+                    <div className="crops-info">
+                        <div className="crop-badge favorable" style={{ marginBottom: '0.5rem' }}>
+                            <Leaf size={16} className="mr-1" />
                             <strong>{t('favorable')}</strong> {locationData.favorableCrops.join(', ')}
                         </div>
-                        <div className="crop-badge unfavorable mt-2">
-                            <AlertTriangle size={14} className="mr-1" />
+                        <div className="crop-badge unfavorable">
+                            <AlertTriangle size={16} className="mr-1" />
                             <strong>{t('avoid')}</strong> {locationData.unfavorableCrops.join(', ')}
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="page-header">
-                <h1>{t('homeWelcome')}</h1>
-                <p className="subtitle">{t('homeSubtitle')}</p>
-            </div>
+
 
             {/* Action Grid (Android Adaptive) */}
             <div className="action-grid mt-6">
@@ -210,23 +271,23 @@ export default function Home() {
 
                     <div className="report-body mt-6">
                         <div className="report-section">
-                            <h4><AlertTriangle size={18} className="inline-icon" /> Reason & Soil Impact</h4>
+                            <h4><AlertTriangle size={20} className="inline-icon" /> Reason & Soil Impact</h4>
                             <p>{diseaseReport.reason}</p>
                         </div>
 
                         <div className="report-section">
-                            <h4><ThermometerSun size={18} className="inline-icon" /> Recommended Pesticides</h4>
+                            <h4><ThermometerSun size={20} className="inline-icon" /> Recommended Pesticides</h4>
                             <ul className="custom-list">
                                 {diseaseReport.pesticides.map((p, i) => <li key={i}>{p}</li>)}
                             </ul>
-                            <div className="contacts-box mt-4 glass-card" style={{ padding: '0.75rem' }}>
-                                <strong style={{ fontSize: '0.9rem', color: 'white' }}>Cleaning & Curing Contacts:</strong>
+                            <div className="contacts-box mt-4 glass-card">
+                                <strong style={{ fontSize: '1rem', color: 'var(--text-primary)' }}>Cleaning & Curing Contacts:</strong>
                                 {diseaseReport.contacts.map((c, i) => <div key={i} className="contact-item" style={{ color: 'var(--primary)', fontWeight: 700 }}>{c}</div>)}
                             </div>
                         </div>
 
                         <div className="report-section">
-                            <h4><ShieldCheck size={18} className="inline-icon" /> Precautions</h4>
+                            <h4><ShieldCheck size={20} className="inline-icon" /> Precautions</h4>
                             <ul className="custom-list">
                                 {diseaseReport.precautions.map((p, i) => <li key={i}>{p}</li>)}
                             </ul>

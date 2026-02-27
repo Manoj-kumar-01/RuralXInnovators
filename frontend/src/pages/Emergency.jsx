@@ -17,12 +17,12 @@ export default function Emergency() {
                 <p className="subtitle text-error">{t('emergencySubtitle')}</p>
             </div>
 
-            <div className="alert-card glass-card mt-6" style={{ background: '#ffdad6', border: 'none' }}>
+            <div className="alert-card glass-card mt-6">
                 <div className="alert-header">
-                    <AlertCircle size={24} style={{ color: '#ba1a1a' }} />
-                    <h3 style={{ color: '#410002' }}>{t('noCyclones')}</h3>
+                    <AlertCircle size={24} className="text-error" />
+                    <h3>{t('noCyclones')}</h3>
                 </div>
-                <p style={{ color: '#410002' }}>{t('weatherOptimal')}</p>
+                <p>{t('weatherOptimal')}</p>
             </div>
 
             <div className="list-container mt-6">
@@ -33,7 +33,7 @@ export default function Emergency() {
                         <h4>{t('kisanCallCenter')}</h4>
                         <p>1800-180-1551</p>
                     </div>
-                    <button className="icon-btn success" style={{ background: '#006d3e' }}><Phone size={20} /></button>
+                    <button className="icon-btn success"><Phone size={24} /></button>
                 </div>
 
                 <div className="helpline-card glass-card">
@@ -41,7 +41,7 @@ export default function Emergency() {
                         <h4>{t('disasterMgmt')}</h4>
                         <p>1270</p>
                     </div>
-                    <button className="icon-btn error" style={{ background: '#ba1a1a' }}><Phone size={20} /></button>
+                    <button className="icon-btn error"><Phone size={24} /></button>
                 </div>
             </div>
         </div>
