@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, Phone, Navigation } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../../node_modules/react-i18next';
 import { ttsService } from '../services/ttsService';
 
 export default function Emergency() {
