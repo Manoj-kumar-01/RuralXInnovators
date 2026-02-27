@@ -1,0 +1,116 @@
+.insights-container {
+    padding: 2rem;
+    min-height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top right, rgba(124, 58, 237, 0.1), transparent),
+        radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent);
+}
+
+.insights-card {
+    width: 100%;
+    max-width: 650px;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border-radius: 24px;
+}
+
+.insights-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.icon-circle.highlight {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+    margin: 0 auto 1.5rem;
+}
+
+.language-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(124, 58, 237, 0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    color: #a78bfa;
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    font-weight: 500;
+}
+
+.input-group-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.insight-input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.25rem;
+    color: white;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insight-input:focus {
+    border-color: #7c3aed;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+}
+
+.insights-result {
+    padding: 2rem;
+    background: rgba(124, 58, 237, 0.05);
+    border-radius: 20px;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.insights-result::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #7c3aed, #4f46e5);
+}
+
+.insights-result h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    background: linear-gradient(to right, #a78bfa, #818cf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.result-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

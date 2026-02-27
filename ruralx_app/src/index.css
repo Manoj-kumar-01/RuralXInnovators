@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Vibrant Green-Gold Agricultural Palette */
+  --primary: #15803d;
+  --primary-light: #22c55e;
+  --primary-container: #dcfce7;
+  --on-primary-container: #052e16;
+
+  --secondary: #ca8a04;
+  --secondary-container: #fef08a;
+  --on-secondary-container: #422006;
+
+  --error: #dc2626;
+  --error-container: #fecaca;
+
+  /* Vibrant Nature Gradient Background */
+  --bg-gradient: linear-gradient(135deg, #052e16 0%, #14532d 25%, #166534 50%, #15803d 75%, #365314 100%);
+
+  /* Colored Glass Widgets (NOT plain white) */
+  /* Dark-Leaf Glass — high visibility, deep contrast for farmers */
+  --widget-bg: rgba(0, 20, 10, 0.45);
+  --widget-border: rgba(34, 197, 94, 0.2);
+  --widget-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+
+  /* Surface Colors for Cards */
+  --surface: rgba(0, 15, 5, 0.85);
+  --surface-border: rgba(34, 197, 94, 0.15);
+
+  --text-dark: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  --font-sans: 'Outfit', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text-dark);
+  /* Rich green/yellow nature gradient with image overlay */
+  background: var(--bg-gradient);
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+  position: relative;
+}
+
+/* Subtle texture overlay for depth */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    url('/vibrant_nature_bg.png') center/cover no-repeat,
+    radial-gradient(ellipse at 30% 20%, rgba(34, 197, 94, 0.3), transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(202, 138, 4, 0.2), transparent 60%);
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Deep Emerald Glass Widget Design */
+.glass-card {
+  background: linear-gradient(135deg,
+      rgba(0, 25, 10, 0.65) 0%,
+      rgba(0, 15, 5, 0.75) 100%);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 28px;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  padding: 1.75rem;
+  transition: transform 0.2s cubic-bezier(0, 0, 0, 1), box-shadow 0.2s ease;
+}
+
+.glass-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Primary Buttons with Vibrant Gradient */
+.primary-btn {
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 1rem 1.75rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(21, 128, 61, 0.4);
+  transition: all 0.3s cubic-bezier(0, 0, 0, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(21, 128, 61, 0.5);
+  filter: brightness(1.1);
+}
+
+.primary-btn:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+  box-shadow: none;
+  filter: none;
+}
+
+/* Interactive Back/TTS Buttons */
+.back-btn,
+.tts-btn {
+  background: rgba(0, 20, 10, 0.6);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #86efac;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0, 0, 0, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn:hover,
+.tts-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+/* Typography — bright on dark green */
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0, 0, 0, 1) forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.4s cubic-bezier(0, 0, 0, 1) forwards;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .glass-card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 24px;
+  }
+}
